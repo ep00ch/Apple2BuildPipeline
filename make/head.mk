@@ -10,7 +10,7 @@
 #  http://www.quinndunki.com/blondihacks
 #
 
-export CC65_HOME := /usr/local/lib/cc65
+export CC65_HOME := /usr/local/share/cc65/lib
 
 CC65_BIN = /usr/local/bin
 
@@ -25,6 +25,6 @@ ASM_SRCS=$(wildcard *.s)
 
 MACHINE=apple2
 CPU=6502
-CFLAGS=
+CFLAGS=-v
 ASMFLAGS=
-LDFLAGS=
+LDFLAGS=-v

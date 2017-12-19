@@ -92,11 +92,25 @@ $(DISKIMAGE): $(PGM)
 	make/createDiskImage $(AC) $(MACHINE) "$(DISKIMAGE)" "$(PGM)" "$(START_ADDR)"
 
 execute: $(DISKIMAGE)
-	osascript make/V2Make.scpt "$(CWD)" "$(PGM)" "$(CWD)/make/DevApple.vii" "$(EXECCMD)"
+#	osascript make/V2Make.scpt "$(CWD)" "$(PGM)" "$(CWD)/make/DevApple.vii" "$(EXECCMD)"
+	osascript \
+-e "tell application \"Virtual ][\"" \
+-e "	activate" \
+-e "	tell front machine" \
+-e "		eject device \"S6D1\"" \
+-e "		insert \"$(CWD)/$(PGM).dsk\" into device \"S6D1\"" \
+-e "		delay 0.5" \
+-e "		restart" \
+-e "		delay 0.25" \
+-e "		if (\"$(EXECCMD)\" is not equal to \"\") then" \
+-e "				type line \"$(EXECCMD)\"" \
+-e "		end if" \
+-e "	end tell" \
+-e "end tell"
 
 %.o:	%.c
-	$(CL65) $(MACHCONFIG) $(CFLAGS) --create-dep -c -o $@ $<
-	sed -i .bak 's/\.s:/.o:/' $(@:.o=.u)
+	$(CL65) $(MACHCONFIG) $(CFLAGS) --create-dep $*.u -c -o $@ $<
+#	sed -i .bak 's/\.s:/.o:/' $(@:.o=.u)
 	rm -f $(@:.o=.u).bak
 
 %.o:	%.s
