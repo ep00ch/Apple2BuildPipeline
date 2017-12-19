@@ -31,7 +31,7 @@ $ make all
 $ sudo make install MAKE="make PREFIX=/usr/local prefix=/usr/local SYS=apple2"
 </pre>
    3. Install the [Apple II project template](https://github.com/jeremysrand/Apple2BuildPipeline/releases/download/1.6/AppleXcodeTemplate.pkg).
-   4. Install and setup [Virtual II](http://www.virtualii.com), or install [a2usbdsk](http://apple-crapple.blogspot.com/)
+   4. Install and setup [Virtual II](http://www.virtualii.com), or install [a2usbdsk](https://sites.google.com/site/maclcdproc/downloads/a2usbdsk_1.5.tgz).
 
 Your First Project:
 -------------------
