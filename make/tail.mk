@@ -30,7 +30,9 @@ EXECCMD=
 ALLTARGET=$(DISKIMAGE)
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-    ALLTARGET=execute
+	ifneq ($(RUNTARGET),)
+		ALLTARGET=$(RUNTARGET)
+    endif
 endif
 
 ifneq ($(START_ADDR),)
@@ -67,7 +69,7 @@ ifeq ($(filter $(MACHINE), apple2 apple2enh),)
     MACHCONFIG += -C $(MACHINE).cfg
 endif
 
-.PHONY: all execute clean
+.PHONY: all execute virtual2 a2usbdsk transfer clean
 	
 all: $(ALLTARGET)
 
@@ -91,14 +93,16 @@ $(PGM): $(OBJS)
 $(DISKIMAGE): $(PGM)
 	make/createDiskImage $(AC) $(MACHINE) "$(DISKIMAGE)" "$(PGM)" "$(START_ADDR)"
 
-execute: $(DISKIMAGE)
-#	osascript make/V2Make.scpt "$(CWD)" "$(PGM)" "$(CWD)/make/DevApple.vii" "$(EXECCMD)"
+a2usbdsk: $(DISKIMAGE)
+	/usr/local/bin/a2usbdsk -1 $(CWD)/$(DISKIMAGE)
+
+execute virtual2: $(DISKIMAGE)
 	osascript \
 -e "tell application \"Virtual ][\"" \
 -e "	activate" \
 -e "	tell front machine" \
 -e "		eject device \"S6D1\"" \
--e "		insert \"$(CWD)/$(PGM).dsk\" into device \"S6D1\"" \
+-e "		insert \"$(CWD)/$(DISKIMAGE)\" into device \"S6D1\"" \
 -e "		delay 0.5" \
 -e "		restart" \
 -e "		delay 0.25" \
@@ -110,7 +114,7 @@ execute: $(DISKIMAGE)
 
 %.o:	%.c
 	$(CL65) $(MACHCONFIG) $(CFLAGS) --create-dep $*.u -c -o $@ $<
-#	sed -i .bak 's/\.s:/.o:/' $(@:.o=.u)
+	sed -i .bak 's/\.s:/.o:/' $(@:.o=.u)
 	rm -f $(@:.o=.u).bak
 
 %.o:	%.s

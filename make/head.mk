@@ -25,6 +25,6 @@ ASM_SRCS=$(wildcard *.s)
 
 MACHINE=apple2
 CPU=6502
-CFLAGS=-v
+CFLAGS=
 ASMFLAGS=
-LDFLAGS=-v
+LDFLAGS=

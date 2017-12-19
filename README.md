@@ -2,6 +2,7 @@ Apple2BuildPipeline
 ===================
 
 A build pipeline for making Apple II software on OS X.
+This fork contains updates to work with cc65 V2.16, and a2usbdsk to run built disk images immediately on a real Apple II.
 
 Features:
 =========
@@ -14,15 +15,23 @@ This project was built based on the one created by [Quinn Dunki](http://quinndun
    * Supports all cc65 Apple configurations.  So, if you want to target enhanced Apple IIe's running DOS 3.3, knock yourself out.  Just set the configuration you want in the Makefile and the build will do the right thing to create a disk image for that configuration.
    * On Mac OS X, Virtual II will start when you build and the emulator with execute your program.  This works for all supported cc65 Apple configurations.  Also, it uses a machine configuration which is stored in the make directory in your project.  That way, you can modify the machine configuration to be exactly the config you want to test under.
    * The Mac OS X deliverable is now an installer which will create an Xcode project template.  So, to start a new Apple II project in Xcode, select File->New->Project.  Among the iOS and OS X project templates, you will find the "Apple II Asm Project" and "Apple II C Project" options.  Select either and you will have a new Apple II project ready to go.
+   * This fork contains updates to work with cc65 V2.16, and a2usbdsk to run built disk images immediately on a real Apple II.
+
 
 Mac OS X Installation:
 ----------------------
 
 In order to use this infrastructure from Mac OS X, follow these instructions:
    1. Install [Xcode from Apple](https://itunes.apple.com/us/app/xcode/id497799835?mt=12&uo=4).  Xcode is generally the most popular app in the Mac App Store in the "Developer Tools" category.  Xcode is free and you do not need to be a registered Apple developer to download and use it, especially if you are building Apple II programs.  I have only tested with Xcode 6 which is the latest version.  It appears as though project templates are a feature introduced in Xcode 4 so the Apple II project template may work with Xcode 4 or 5 but I have not tested them.
-   2. Install the [cc65 v2.13.3 package](https://github.com/jeremysrand/Apple2BuildPipeline/releases/download/1.0/cc65.2.13.3.pkg).
+   2. Build and Install cc65 v2.16 or later:
+<pre>
+$ git clone -b 'V2.16' https://github.com/cc65/cc65.git
+$ cd cc65
+$ make all
+$ sudo make install MAKE="make PREFIX=/usr/local prefix=/usr/local SYS=apple2"
+</pre>
    3. Install the [Apple II project template](https://github.com/jeremysrand/Apple2BuildPipeline/releases/download/1.6/AppleXcodeTemplate.pkg).
-   4. Install and setup [Virtual II](http://www.virtualii.com).
+   4. Install and setup [Virtual II](http://www.virtualii.com), or install [a2usbdsk](http://apple-crapple.blogspot.com/)
 
 Your First Project:
 -------------------

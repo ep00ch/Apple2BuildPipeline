@@ -89,6 +89,10 @@ PGM=PKGNAME
 # the path to it by uncommenting the following line:
 #    export JAVA=/usr/bin/java
 
+# Uncomment the Mac OSX run target that you want to use below 
+# (just make a disk image is the default):
+#    RUNTARGET=virtual2
+    RUNTARGET=a2usbdsk
 
 # Do not change anything else below here...
 include make/tail.mk
