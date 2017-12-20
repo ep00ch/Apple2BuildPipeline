@@ -61,12 +61,16 @@ endif
 
 MACHCONFIG= -t apple2
 
-ifneq ($(filter $(MACHINE), apple2enh apple2apple2enh-dos33 apple2enh-system apple2enh-loader apple2enh-reboot),)
+ifneq ($(filter $(MACHINE), apple2enh apple2enh-dos33 apple2enh-system apple2enh-loader apple2enh-reboot),)
     MACHCONFIG= -t apple2enh
 endif
 
 ifeq ($(filter $(MACHINE), apple2 apple2enh),)
     MACHCONFIG += -C $(MACHINE).cfg
+else
+# The configuration current.cfg will be apple2(enh)-asm.cfg if there is only asembly.
+# or apple2(enh).cfg if there is any c code.
+	MACHCONFIG += -C current.cfg
 endif
 
 .PHONY: all execute virtual2 a2usbdsk transfer clean
@@ -80,6 +84,8 @@ clean:
 	rm -f $(MAPFILE)
 	rm -f $(ASM_LSTS)
 	rm -f "$(DISKIMAGE)"
+	rm -f "current.cfg"
+
 
 createPackage:
 	pkg/createPackage
@@ -112,13 +118,19 @@ execute virtual2: $(DISKIMAGE)
 -e "	end tell" \
 -e "end tell"
 
-%.o:	%.c
+
+%.o %cgf:	%.c
 	$(CL65) $(MACHCONFIG) $(CFLAGS) --create-dep $*.u -c -o $@ $<
 	sed -i .bak 's/\.s:/.o:/' $(@:.o=.u)
 	rm -f $(@:.o=.u).bak
+# Overwrite a previous cfg file which may have less requirements.
+	cp $(CC65_HOME)/../cfg/$(MACHINE).cfg ./current.cfg
 
-%.o:	%.s
-	$(CL65) $(MACHCONFIG) --cpu $(CPU) $(ASMFLAGS) -l -c -o $@ $<
+
+%.o %cgf:	%.s
+	$(CL65) $(MACHCONFIG) --cpu $(CPU) $(ASMFLAGS) -l $*.lst -c -o $@ $<
+# Don't overwrite (but don't error on) a previous cfg file which may have extra requirements.
+	cp -n $(CC65_HOME)/../cfg/$(MACHINE)-asm.cfg ./current.cfg ||:
 
 $(OBJS): Makefile
 
